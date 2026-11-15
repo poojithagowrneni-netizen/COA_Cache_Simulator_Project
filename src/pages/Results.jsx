@@ -6,7 +6,7 @@ function loadResults() {
     const saved = localStorage.getItem("lastResults");
     const parsed = saved ? JSON.parse(saved) : null;
     return Array.isArray(parsed) && parsed.length > 0 ? parsed : sampleResults;
-  } catch (err) {
+  } catch {
     return sampleResults;
   }
 }
@@ -31,12 +31,24 @@ function MetricChart({ title, data, dataKey, color }) {
   return (
     <div className="chart-box">
       <h4>{title}</h4>
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data}>
+      <ResponsiveContainer width="100%" height={320}>
+        <BarChart data={data} margin={{ top: 10, right: 15, left: 15, bottom: 65 }}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="label" tick={{ fontSize: 10 }} interval={0} angle={-30} textAnchor="end" height={80} />
-          <YAxis />
-          <Tooltip />
+          <XAxis
+            dataKey="label"
+            tick={{ fontSize: 9 }}
+            interval={0}
+            angle={-35}
+            textAnchor="end"
+            height={85}
+          />
+          <YAxis domain={dataKey === "hitRate" ? [0, 100] : ["auto", "auto"]} />
+          <Tooltip
+            formatter={(value) => [
+              dataKey === "hitRate" || dataKey === "missRate" ? `${value}%` : `${value} ns`,
+              dataKey,
+            ]}
+          />
           <Bar dataKey={dataKey} fill={color} />
         </BarChart>
       </ResponsiveContainer>

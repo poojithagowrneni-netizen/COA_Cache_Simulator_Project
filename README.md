@@ -1,16 +1,82 @@
-# React + Vite
+# COA Cache Memory Performance Analyzer
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A full-stack trace-driven cache memory performance simulator with an interactive React/Vite frontend, a Python/Flask simulation engine, and MongoDB persistence.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Quick Start
 
-## React Compiler
+### macOS / Linux
+Run the all-in-one launcher script from the project root:
+```bash
+./start_servers.sh
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Windows
+Run the batch launcher script:
+```cmd
+start_servers.bat
+```
 
-## Expanding the Oxlint configuration
+Once running:
+- **Frontend**: [http://localhost:5173](http://localhost:5173)
+- **Backend API**: [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+---
+
+## 🛠 Project Structure
+
+```
+COA_Cache_Simulator_Project/
+├── start_servers.sh            # macOS / Linux unified launcher
+├── start_servers.bat           # Windows unified launcher
+├── COA_Cache_Simulator_Project.zip # Standalone distributable archive
+└── cache_build/
+    └── COA FRONTEND/
+        ├── backend/
+        │   ├── app.py          # Flask REST API endpoints
+        │   ├── database.py     # MongoDB persistence layer
+        │   ├── requirements.txt # Python dependencies
+        │   ├── cache/
+        │   │   ├── mapping.py  # Cache mapping algorithms
+        │   │   ├── lru.py      # Least-Recently-Used policy
+        │   │   ├── fifo.py     # First-In-First-Out policy
+        │   │   ├── random_replacement.py # Random eviction policy
+        │   │   └── simulator.py # Trace parser & simulation engine
+        │   └── tests/          # Automated backend unit tests
+        ├── src/
+        │   ├── App.jsx         # Code-split router & database status pill
+        │   ├── api/client.js   # API client & localStorage fallback
+        │   ├── pages/
+        │   │   ├── Home.jsx    # Overview & getting started
+        │   │   ├── Simulator.jsx # Configuration form & trace upload
+        │   │   ├── Results.jsx # Performance metrics, charts & CSV export
+        │   │   └── History.jsx # MongoDB simulation run history
+        │   └── mock/           # Fallback mock data
+        ├── tester_bot.py       # Comprehensive verification bot
+        ├── vite.config.js      # Vite build config with vendor chunking
+        ├── package.json        # Frontend dependencies
+        └── sample.trace        # Benchmark trace file
+```
+
+---
+
+## 📊 Features
+
+- **Mapping Strategies**: Direct Mapped (`1-way`), N-Way Set Associative (`2-way`, `4-way`, `8-way`), and Fully Associative.
+- **Eviction Policies**: LRU (Least Recently Used), FIFO (First-In-First-Out), and Random.
+- **Trace Support**: Hexadecimal (`0x...`), CSV tables, Dinero IV format, and Valgrind lackey logs.
+- **Metrics Computed**: Total accesses, cache hits, cache misses, hit rate (%), miss rate (%), and AMAT (Average Memory Access Time in ns).
+- **MongoDB Persistence**: Simulation runs and historical benchmarks are persisted to MongoDB (`cache_simulator` database) with full fallback support.
+- **Optimized Frontend**: Route-level code-splitting with `React.lazy()` and `Suspense`, isolating heavy dependencies like Recharts for fast initial page loads.
+
+---
+
+## 🧪 Testing
+
+To run the complete automated test suite (backend unit tests, frontend oxlint, and production build):
+
+```bash
+cd "cache_build/COA FRONTEND"
+.venv/bin/python tester_bot.py
+```
